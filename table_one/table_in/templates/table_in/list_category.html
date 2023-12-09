@@ -1,0 +1,56 @@
+{% extends 'table_in/base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'home_page' %}">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-fill" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                d="M8 3.293l6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z" />
+            <path fill-rule="evenodd"
+                d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z" />
+        </svg>
+    </a></li>
+<li class="breadcrumb-item active" aria-current="page">Список Категорий</li>
+{% endblock breadcrumb %}
+
+{% block content %}
+<h5 class="cover-heading">Список Категорий!</h5>
+
+<table style="color:white;" class="table table-hover table-borderless table-sm ">
+    <thead>
+        <tr class="border-bottom border-secondary">
+            <th scope="col">№</th>
+            <th scope="col">Название категории</th>
+            <th scope="col">Главная категория</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat in list_category_all %}
+        <tr>
+            <td>{{ cat.number }}</td>
+            <td><a href="{% url 'list_category_edit_url' pk=cat.pk %}">{{ cat.name }}</a></td>
+                
+            {% if cat.check_top_category %}
+                <td>
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z" />
+                    </svg>
+                </td>
+            {% else %}
+                <td></td>
+            {% endif %}
+
+        {% endfor %}
+        </tr>
+    </tbody>
+</table>
+<p>-----------</p>
+<div class="pt-2" style="text-align: right;">
+    <a href="{% url 'create_fields' %}" class="btn btn-outline-primary btn-sm active" role="button"
+        aria-pressed="true">Добавить категорию</a>
+    <a href="{% url 'home_page' %}" class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">На
+        главную</a>
+</div>
+{% endblock content %}

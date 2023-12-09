@@ -1,0 +1,237 @@
+{% extends 'table_in/base_pdf.html' %}
+{% load static %}
+
+{% block content %}
+<!-- {{ u.user_category|join:", " }} -->
+<style type="text/css">
+    @page {
+        size: A4 portrait;
+        margin: 0.5cm 1.5cm;
+    }
+
+    @font-face {
+        font-family: 'Arial';
+        src: url("/static/arial.ttf");
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .color-back {
+        background-color: #fff;
+    }
+
+    .table-bordered td,
+    .table-bordered th {
+        border: 1px solid #666;
+    }
+
+    .table>tbody>tr {
+        padding: 2pt 0 0 0;
+    }
+
+    .table>tbody>tr>th {
+        padding-top: 2px;
+    }
+
+    .back-gray {
+        background-color: #b3b3b3;
+    }
+    .max_img {
+        height:70px;
+        width: auto;
+        position: inherit;
+    }
+</style>
+
+<p style="font-size: 18px;margin-bottom:0" class="cover-heading">Строевая записка отдела технической поддержки систем электронного документооборота ЦАиТП ФКУ ГЦИТОиС ФСИН России</p>
+<p style="margin:0">{{ time_day }}</p>
+
+<!-- Start header -->
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr style="padding-top: 5px;" class="back-gray">
+                <th style="width: 40%;">Наименование</th>
+                <th>По штату</th>
+                <th>По факту</th>
+                <th>Некомплект</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">Всего</th>
+                <td>
+                    {{ user_shtat_all.count_shtat__sum }}
+                </td>
+                <td>
+                    <!-- по факту -->
+                    {{ st_users_all }}
+                </td>
+                <td>
+                    <!-- Некомплект Всего -->
+                    {{ nekompl_all }}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">- средний и старший НС</th>
+                <td>
+                    {{ user_shtat_one }}
+                </td>
+                <td>
+                    {{ st_users_one }}
+                </td>
+                <td>
+                    {{ nekompl_shtat_one }}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">- рядовой и младший НС</th>
+                <td>
+                    {{ user_shtat_two }}
+                </td>
+                <td>
+                    {{ st_users_two }}
+                </td>
+                <td>
+                    {{ nekompl_shtat_two }}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">- служащие</th>
+                <td>
+                    {{ user_shtat_tree }}
+                </td>
+                <td>
+                    {{ st_users_tree }}
+                </td>
+                <td>
+                    {{ nekompl_shtat_tree }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- End Header -->
+
+<table style="margin-top: 15px;" class="table table-bordered">
+    <tbody>
+        {% for cat_top in category_top %}
+            <tr class="d-flex back-gray">
+                <th class="align-items-center col-6">
+                    {{ cat_top }}
+                </th>
+                <td class="col-6">
+                    {% if cat_top.check_top_category == '1' %}
+                        <!-- {{ category_down|length }} -->
+                        {{v_stroju|length}}<br>
+                        {{v_stroju|join:", "}}
+
+                        <!-- {% for cat in category_down %}
+                            {{cat.tableusers_name|add:cat}}
+                        {% endfor %} -->
+                    {% elif cat_top.check_top_category == '4' %}
+                        {{ otsutstvujut|length }}
+                    {% else %}
+                        {{ cat_top.tableusers_set.all|length }}<br>
+                    
+                        {% for user in cat_top.tableusers_set.all %}   
+                            {{ user }}
+                            {% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        <!-- Блок с отсутствующими сотрудниками -->
+        {% for cat_down in category_down %}
+            
+            <!-- {% if cat_down.tableusers_set.all %} -->
+            <tr class="d-flex color-back">
+                <td class="align-items-center col-6">
+                    {{ cat_down }}
+                </td>
+                <td class="col-6">
+                    {{ cat_down.tableusers_set.all|length }}<br>
+            
+                    {% for user in cat_down.tableusers_set.all %}
+                        {{ user }}
+            
+                    {% if user.user_date_range %}
+                    <span style="color:#999">
+                        ({{ user.user_date_range }})
+                    </span>
+                    {% endif %}
+            
+                    {% if user.user_medical_date_range %}
+                    <span style="color:#999">
+                        ({{ user.user_medical_date_range }})
+                    </span>
+                    {% endif %}
+            
+                    {% if not forloop.last %},{% endif %}
+                    {% endfor %}
+            
+                </td>
+            </tr>
+            <!-- {% else %}{% endif %} -->
+        {% endfor %}
+        <!-- Конец блока с отсутствующими сотрудниками -->
+    </tbody>
+</table>
+<!-- START not COVID users -->
+<table style="margin-top: 15px;" class="table table-bordered">
+    <tbody>
+        <tr class="d-flex color-back">
+            <th class="col-6">
+                Прошли лабораторное обследование
+            </th>
+            <td class="col-6">
+                {% for covid in table_users_all %}
+                    {% if covid.user_corona is True %}
+                        {{ covid.name }}
+                        <!-- {% if not forloop.last %},{% endif %} -->
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr class="d-flex color-back">
+            <td class="col-6">
+                Прошедшие вакцинацию от СОVID-19
+            </td>
+            <td class="col-6">
+                {% for vakcina in table_users_all %}
+                {% if vakcina.user_vakcina_corona is True %}
+                {{ vakcina.name }}
+                {% if not forloop.last %},{% endif %}
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<!-- END not COVID users -->
+<table style="font-size: 16px;margin-top: 25px;" class="table table-borderless">
+    <tbody>
+        <tr>
+            <th style="text-align:left;width: 55%;">
+                {% for s in sign %}
+                    {{ s.doljnost|linebreaks }}
+                {% endfor %}
+            </th>
+            <!-- style="max-height:70px;" -->
+            <th>
+                   {% for s in sign %}
+                        <img class="max_img" src="/media/{{ s.image }}" alt="My Sign">
+                    {% endfor %} 
+            </th>
+            <th style="vertical-align:bottom;">
+                <p>{{ sign|join:"" }}</p>
+            </th>
+        </tr>
+    </tbody>
+</table>
+{% endblock content %}
