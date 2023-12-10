@@ -354,8 +354,8 @@ class GeneratePdf(View):
         # link = rf'\\zh-srv-store-1.guin.gov\OTPIS\_!Отчеты\Кто в отпуске для строевки ОТПИС (lapina.g.d@fsin.uis)\{date_year}\{date_month}\{name_pdf}'
         # link_dirs = rf'\\zh-srv-store-1.guin.gov\OTPIS\_!Отчеты\Кто в отпуске для строевки ОТПИС (lapina.g.d@fsin.uis)\{date_year}\{date_month}'
 
-        link = os.path.abspath(os.path.join("../../../stroevaya_zapiska/", date_year, date_month, name_pdf))
-        link_dirs = os.path.abspath(os.path.join("../../../stroevaya_zapiska/", date_year, date_month))
+        link = os.path.abspath(os.path.join("../../stroevaya_zapiska/", date_year, date_month, name_pdf))
+        link_dirs = os.path.abspath(os.path.join("../../stroevaya_zapiska/", date_year, date_month))
 
         if os.path.exists(link_dirs) is False:
             os.makedirs(link_dirs)
