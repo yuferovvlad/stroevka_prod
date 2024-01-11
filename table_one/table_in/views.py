@@ -3,8 +3,8 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Sum
 from django.db.models import Count
-from .models import TableStat, TableUsers, UsersShtat
-from .forms import ChangeStatusUsers, AddUsers, CategoryForm
+from .models import TableStat, TableUsers, UsersShtat, TableUsersSign
+from .forms import ChangeStatusUsers, AddUsers, CategoryForm, AddUsersSign
 from .send_pdf import send_email
 from django.views.generic import View
 from .utils import ObjectUpdateMixin, ObjectDeleteMixin, render_to_pdf
@@ -71,7 +71,8 @@ def home_page(request):
     nekompl_atest = nekompl_shtat_one + nekompl_shtat_two
 
     # Подпись
-    sign = TableUsers.objects.filter(users_sign=True)
+    # sign = TableUsers.objects.filter(users_sign=True)
+    sign = TableUsersSign.objects.filter(users_sign=True)
 
     context = {
         'otsutstvujut': otsutstvujut,
@@ -119,13 +120,36 @@ class CreateFields(View):
             return redirect(home_page)
         return render(request, 'table_in/create_fields.html', context={'form': bound_form})
 
+class CreateFieldsSign(View):
+    def get(self, request):
+        form = AddUsersSign()
+        return render(request, 'table_in/create_fields_sign.html', context={'form': form})
+
+    def post(self, request):
+        bound_form = AddUsersSign(request.POST)
+
+        if bound_form.is_valid():
+            new_form = bound_form.save()
+            return redirect(home_page)
+        return render(request, 'table_in/create_fields_sign.html', context={'form': bound_form})
+
 
 def list_users(request):
     list_users_all = TableUsers.objects.all()
-    sign = TableUsers.objects.filter(users_sign=True)
+    #sign = TableUsers.objects.filter(users_sign=True)
     return render(request, 'table_in/lists_users.html',
                   {
                       'list_users_all': list_users_all,
+                      #'sign': sign,
+                  }
+                  )
+
+def list_users_sign(request):
+    list_users_sign_all = TableUsersSign.objects.all()
+    sign = TableUsersSign.objects.filter(users_sign=True)
+    return render(request, 'table_in/lists_users_sign.html',
+                  {
+                      'list_users_sign_all': list_users_sign_all,
                       'sign': sign,
                   }
                   )
@@ -182,9 +206,25 @@ class UsersUpdate(ObjectUpdateMixin, View):
     redirect_url = 'list_users_url'
 
 
+class UsersSignUpdate(ObjectUpdateMixin, View):
+    model = TableUsersSign
+    model_form = AddUsersSign
+    template = 'table_in/update_users_sign.html'
+    raise_exception = True
+    fields_form = 'профиля'
+    redirect_url = 'list_users_sign_url'
+
+
 class UsersDelete(ObjectDeleteMixin, View):
     model = TableUsers
     template = 'table_in/delete_users.html'
+    redirect_url = 'home_page'
+    raise_exception = True
+
+
+class UsersSignDelete(ObjectDeleteMixin, View):
+    model = TableUsers
+    template = 'table_in/delete_users_sign.html'
     redirect_url = 'home_page'
     raise_exception = True
 
@@ -240,7 +280,8 @@ def pdf_generate(request):
     nekompl_atest = nekompl_shtat_one + nekompl_shtat_two
 
     # Подпись
-    sign = TableUsers.objects.filter(users_sign=True)
+    # sign = TableUsers.objects.filter(users_sign=True)
+    sign = TableUsersSign.objects.filter(users_sign=True)
 
     context = {
         'otsutstvujut': otsutstvujut,
@@ -320,7 +361,8 @@ class GeneratePdf(View):
         nekompl_atest = nekompl_shtat_one + nekompl_shtat_two
 
         # Подпись
-        sign = TableUsers.objects.filter(users_sign=True)
+        # sign = TableUsers.objects.filter(users_sign=True)
+        sign = TableUsersSign.objects.filter(users_sign=True)
 
         context = {
             'otsutstvujut': otsutstvujut,
@@ -349,13 +391,21 @@ class GeneratePdf(View):
         date_year = f'{time.strftime("%Y", time.localtime())}'
         date_month = f'{time.strftime("%m-%Y", time.localtime())}'
         date_pdf = f'{time.strftime("%Y-%m-%d", time.localtime())}'
-        name_pdf = f'{date_pdf} Строевая записка отдела ТПСЭД ЦАиТП.pdf'
+        name_pdf = f'{date_pdf} Строевая записка ЦАиТП.pdf'
 
         # link = rf'\\zh-srv-store-1.guin.gov\OTPIS\_!Отчеты\Кто в отпуске для строевки ОТПИС (lapina.g.d@fsin.uis)\{date_year}\{date_month}\{name_pdf}'
         # link_dirs = rf'\\zh-srv-store-1.guin.gov\OTPIS\_!Отчеты\Кто в отпуске для строевки ОТПИС (lapina.g.d@fsin.uis)\{date_year}\{date_month}'
 
-        link = os.path.abspath(os.path.join("../../stroevaya_zapiska/", date_year, date_month, name_pdf))
-        link_dirs = os.path.abspath(os.path.join("../../stroevaya_zapiska/", date_year, date_month))
+        link = os.path.abspath(os.path.join("../../../stroevki", date_year, date_month, name_pdf))
+        link_dirs = os.path.abspath(os.path.join("../../../stroevki", date_year, date_month))
+
+        # current_file = os.path.abspath(__file__)
+        # current_directory = os.path.dirname(current_file)
+        #
+        # link = os.path.abspath(os.path.join(current_directory, "../../../stroevki", date_year, date_month, name_pdf))
+        # link_dirs = os.path.abspath(os.path.join(current_directory, "../../../stroevki", date_year, date_month))
+
+
 
         if os.path.exists(link_dirs) is False:
             os.makedirs(link_dirs)
@@ -368,12 +418,20 @@ class GeneratePdf(View):
                 html = template.render(context)
 
                 try:
-                    pdf = pisa.CreatePDF(html.encode("UTF-8"),
-                                    output, encoding='UTF-8', link_callback=fetch_resources)
+                    pdf = pisa.CreatePDF(
+                        html.encode("UTF-8"),
+                        output, encoding='UTF-8',
+                        link_callback=fetch_resources
+                    )
                 except Exception as e:
                     print(f'Error during PDF creation: {e}')
                     print(html)
                 send_email(link, name_pdf)
-                messages.success(request, 'PDF сформирован и отправлен!')
+                messages.success(
+                    request,
+                    'PDF сформирован и отправлен\n'
+                    'на следующие email:\n\n'
+                    'yuferov.v.y@fsin.uis'
+                )
         return redirect('home_page')
         # return pdf

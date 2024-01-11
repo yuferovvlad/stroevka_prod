@@ -1,0 +1,11 @@
+{% extends 'table_in/base.html' %}
+
+{% block content %}
+<form action="{{ tableuserssign.get_delete_url }}" method="post">
+    {% csrf_token %}
+
+    <h3>Вы уверены, что хотите удалить пользователя?</h3>
+    <a href="{% url 'list_users_sign_url' %}">Отмена</a>
+    <button type="submit" name="button" class="btn btn-danger">Удалить</button>
+</form>
+{% endblock content %}

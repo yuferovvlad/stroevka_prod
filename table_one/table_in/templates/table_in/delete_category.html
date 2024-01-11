@@ -4,7 +4,7 @@
 <form action="{{ tablestat.get_delete_url }}" method="post">
     {% csrf_token %}
     
-    <h3>Вы уверены что хотите удалить категорию?</h3>
+    <h3>Вы уверены, что хотите удалить категорию?</h3>
     <a href="{% url 'list_category_url' %}">Отмена</a>
     <button type="submit" name="button" class="btn btn-danger">Удалить</button>
 </form>

@@ -16,10 +16,10 @@ def send_email(link, name_pdf):
     SEND PDF FILE for SMTP
     """
 
-    recipients = ['kostyuhina.d.v@fsin.uis', 'lavrov.s.v@fsin.uis', 'sibigatulin.v.m@fsin.uis', 'yuferov.v.y@fsin.uis', 'skvorcov.a.v@fsin.uis']
+    #recipients = ['kostyuhina.d.v@fsin.uis', 'lavrov.s.v@fsin.uis', 'sibigatulin.v.m@fsin.uis', 'yuferov.v.y@fsin.uis', 'skvorcov.a.v@fsin.uis']
 
     # testing
-    #recipients = ['yuferov.v.y@fsin.uis']
+    recipients = ['yuferov.v.y@fsin.uis']
     # subject = name_pdf
     # body = f"Прикрепил pdf"
 
@@ -40,6 +40,7 @@ def send_email(link, name_pdf):
 
     # msg.attach(MIMEText(message, "plain"))
     # pdf = MIMEApplication(open(link, 'r').read())
+
     with open(link, "rb") as f:
         attach = MIMEApplication(f.read(), _subtype="pdf")
     name_pdf = to_base64(name_pdf)

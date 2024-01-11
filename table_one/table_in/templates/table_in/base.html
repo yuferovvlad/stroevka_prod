@@ -5,14 +5,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!--<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>-->
+	<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <meta name="description" content="">
 
-    <title>Строевка ОТПСЭД ЦАиТП</title>
+    <title>Строевка ЦАиТП</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
- 
+
     <style>
         @media (min-width: 768px) {
         .container, .container-md, .container-sm {
@@ -42,7 +42,7 @@
     <div class="wrapper">
         <!-- Sidebar -->
         <nav class="sidebar">
-        
+
             <!-- close sidebar menu -->
             <div class="dismiss">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-backspace" fill="currentColor"
@@ -51,11 +51,11 @@
                         d="M6.603 2h7.08a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-7.08a1 1 0 0 1-.76-.35L1 8l4.844-5.65A1 1 0 0 1 6.603 2zm7.08-1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zM5.829 5.146a.5.5 0 0 0 0 .708L7.976 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z" />
                 </svg>
             </div>
-        
+
             <div class="logo">
-                <h3>ОТПСЭД ЦАиТП</h3>
+                <h3>ЦАиТП</h3>
             </div>
-            
+
             <ul class="nav flex-column list-unstyled menu-elements">
                 <li class="nav-item text-center">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
@@ -82,7 +82,14 @@
                                     d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
                                 <path fill-rule="evenodd"
                                     d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                            </svg> Пользователя</a>
+                            </svg> Сотрудника</a>
+                        <a class="dropdown-item" href="{% url 'create_fields_sign' %}"><svg width="1em" height="1em" viewBox="0 0 16 16"
+                                class="bi bi-plus-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                <path fill-rule="evenodd"
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                            </svg> Подписанта</a>
                         <a class="dropdown-item" href="{% url 'create_category' %}"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-square"
                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -106,6 +113,13 @@
                                 <path fill-rule="evenodd"
                                     d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                             </svg> Пользователей</a>
+                        <a class="dropdown-item" href="{% url 'list_users_sign_url' %}"><svg width="1em" height="1em" viewBox="0 0 16 16"
+                                class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg> Подписантов</a>
                         <a class="dropdown-item" href="{% url 'list_category_url' %}"><svg width="1em" height="1em" viewBox="0 0 16 16"
                                 class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -163,13 +177,13 @@
                     <a class="scroll-link" href="#"> API</a>
                 </li>
             </ul>
-        
+
         </nav>
         <!-- End sidebar -->
-        
+
         <!-- Dark overlay -->
         <div class="overlay"></div>
-        
+
         <!-- Content -->
         <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column text-center">
             <!-- open sidebar menu -->
@@ -180,12 +194,12 @@
                         d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
                 </svg>
             </a>
-            
+
             <header class="masthead mb-auto">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         {% block breadcrumb %}
-                
+
                         {% endblock breadcrumb %}
                     </ol>
                 </nav>
@@ -198,11 +212,11 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                {% endfor %} 
+                {% endfor %}
             {% endif %}
             <main role="main" class="inner cover">
                 {% block content %}
-                    
+
                 {% endblock content %}
             </main>
 
@@ -225,7 +239,7 @@
                 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
                 <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
                 {% block footer_scripts %}
-                    
+
                 {% endblock footer_scripts %}
             </footer>
         </div>

@@ -29,7 +29,7 @@ class ObjectUpdateMixin:
         bound_form = self.model_form(request.POST, request.FILES, instance=obj)
         if bound_form.is_valid():
             new_obj = bound_form.save()
-            messages.success(request, f'Обновление "{self.fields_form}"" прошло успешно.')
+            messages.success(request, f'Обновление "{self.fields_form}" прошло успешно.')
             return redirect(reverse(self.redirect_url))
         return render(request, self.template, context={'form': bound_form, self.model.__name__.lower(): obj})
 
